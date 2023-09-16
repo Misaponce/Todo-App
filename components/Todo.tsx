@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
 import CustomInput from './CustomInput'
 import CloseIcon from '../assets/images/icon-cross.svg';
@@ -13,6 +13,26 @@ const Todo = () => {
 
   const [todos, setTodos] = useState<ItemType[]>([]);
   const [input, setInput] = useState<string>('');
+  const [displayTodos, setDisplayTodos] = useState<ItemType[]>([]);
+
+  // Load todos from local storage when the component mounts
+
+  useEffect(() => {
+    const savedTodos = localStorage.getItem('todos');
+
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos))
+      setDisplayTodos(JSON.parse(savedTodos))
+    }
+  }, []);
+
+  // Save todos to local storage whenever they change
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+    // Updating displaytodos whenever todos change
+    setDisplayTodos(todos)
+  }, [todos]);
 
   const handleTodoInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.currentTarget.value);
@@ -23,7 +43,6 @@ const Todo = () => {
     setInput('');
 
     const newTodo: ItemType = {id: uuidv4(), text:input, completed:false}
-    console.log(newTodo.id)
     
     setTodos([...todos, newTodo])
   }
@@ -45,6 +64,19 @@ const Todo = () => {
     );
  };
 
+ const handleFilterCompletedItem = () => {
+  setDisplayTodos(todos.filter((todo) => todo.completed)
+  )
+ }
+
+ const handlerFilterActiveItems = () => {
+  setDisplayTodos(todos.filter((todo) => !todo.completed))
+ }
+
+ const handleFilterAllItems = () => {
+  setDisplayTodos(todos)
+ }
+
   return (
     <div className="todo-wrapper flex flex-col w-full">
       <form onSubmit={handleSubmitForm}>
@@ -56,23 +88,27 @@ const Todo = () => {
         />
       </form>
       <ul>
-        {todos.map((todo) => (
+        {displayTodos.map((todo) => (
           <li key={todo.id} className={`${todo.completed ? 'line-through' : ''} flex justify-between items-center m-4`}>
+            {/* Completed Item */}
             <div onClick={() => {handleCompleteItem(todo.id)}} className='rounded-full border-2 flex justify-center items-center p-1 cursor-pointer'>
               <Image src={CheckIcon} alt='Check-Icon' className='object-contain w-3 h-3'/>
             </div>
-            <span className='flex-1 ms-2'>
+            <span className='flex-1 ms-2 cursor-default select-none'>
               {todo.text}
             </span>
-            <div onClick={() => handleDeleteItem(todo.id)} className='ml-auto'>
+            {/* Delete Item */}
+            <div onClick={() => handleDeleteItem(todo.id)} className='ml-auto opacity-50 hover:opacity-100'>
               <Image src={CloseIcon} alt='Close-icon' className='object-contain w-3 h-3 cursor-pointer'/>
             </div>
           </li>
         ))}
       </ul>
-      <h4>
-        All Active Completed
-      </h4> 
+      <div className='flex justify-center gap-2'>
+        <button onClick={handleFilterAllItems}>All</button>
+        <button onClick={handlerFilterActiveItems}>Active</button>
+        <button onClick={handleFilterCompletedItem}>Complete</button>
+      </div>
     </div>
   )
 }
