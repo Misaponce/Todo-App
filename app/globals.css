@@ -48,8 +48,21 @@ body {
 }
 
 .custom-input {
-  background-color: var(--Very-Dark-Grayish-Blue);
+  background-color: var(--Very-Dark-Desaturated-Blue);
   color: var(--Very-Light-Gray);
+}
+
+.todo-item {
+  background-color: var(--Very-Dark-Desaturated-Blue);
+}
+
+.todo-item-completed {
+  color: var(--Dark-Grayish-Blue);
+}
+
+.bottom-display-options, .bottom-menu {
+  background-color: var(--Very-Dark-Desaturated-Blue);
+  color: var(--Dark-Grayish-Blue);
 }
 
 /* Responsive Design */

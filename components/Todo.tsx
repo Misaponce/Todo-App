@@ -77,8 +77,12 @@ const Todo = () => {
   setDisplayTodos(todos)
  }
 
+ const handleClearCompleteItems = () => {
+  setDisplayTodos(todos.filter((todo) => !todo.completed))
+ }
+
   return (
-    <div className="todo-wrapper flex flex-col w-full">
+    <div className="todo-wrapper flex flex-col w-full sm:w-2/5 sm:mt-4">
       <form onSubmit={handleSubmitForm}>
         <CustomInput
           type='text'
@@ -87,24 +91,35 @@ const Todo = () => {
           onChange={handleTodoInput}
         />
       </form>
-      <ul>
+      <ul className='mt-4 rounded-t-lg overflow-hidden'>
         {displayTodos.map((todo) => (
-          <li key={todo.id} className={`${todo.completed ? 'line-through' : ''} flex justify-between items-center m-4`}>
+          <li key={todo.id} 
+            className={` 
+            flex justify-between items-center todo-item
+            p-4 border-b-2 border-gray-700`}>
             {/* Completed Item */}
-            <div onClick={() => {handleCompleteItem(todo.id)}} className='rounded-full border-2 flex justify-center items-center p-1 cursor-pointer'>
-              <Image src={CheckIcon} alt='Check-Icon' className='object-contain w-3 h-3'/>
+            <div onClick={() => {handleCompleteItem(todo.id)}} className={`${todo.completed ? 'line-through todo-item-completed' : ''} flex cursor-pointer`}>
+              <div className={`${todo.completed ? 'bg-gradient-to-br from-blue-500 to-pink-500' : ''} rounded-full border-2 flex justify-center items-center p-1`}>
+                <Image src={CheckIcon} alt='Check-Icon' className='object-contain w-3 h-3'/>
+              </div>
+              <span className='flex-1 ms-2 cursor-pointer select-none'>
+                {todo.text}
+              </span>
             </div>
-            <span className='flex-1 ms-2 cursor-default select-none'>
-              {todo.text}
-            </span>
             {/* Delete Item */}
-            <div onClick={() => handleDeleteItem(todo.id)} className='ml-auto opacity-50 hover:opacity-100'>
+            <div onClick={() => handleDeleteItem(todo.id)} className='ml-auto opacity-70 hover:opacity-100'>
               <Image src={CloseIcon} alt='Close-icon' className='object-contain w-3 h-3 cursor-pointer'/>
             </div>
           </li>
         ))}
       </ul>
-      <div className='flex justify-center gap-2'>
+      <div className='p-4 bottom-display-options w-full rounded-b-md flex justify-between'>
+        <span className='select-none'>
+          {displayTodos.filter((todo) => !todo.completed).length} Items Left
+        </span>
+        <button onClick={handleClearCompleteItems}>Clear All Completed</button>
+      </div>
+      <div className='flex justify-center gap-8 bottom-menu mt-3 p-4 rounded-lg'>
         <button onClick={handleFilterAllItems}>All</button>
         <button onClick={handlerFilterActiveItems}>Active</button>
         <button onClick={handleFilterCompletedItem}>Complete</button>

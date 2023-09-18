@@ -7,7 +7,7 @@ const CustomInput = ({ type, placeHolder, onChange, value }: CustomInputProps) =
       type={type} 
       value={value}
       placeholder={placeHolder} 
-      className='custom-input px-4 py-2 w-full'
+      className='custom-input p-4 w-full rounded-lg'
       onChange={onChange}/>
   )
 }
