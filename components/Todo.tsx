@@ -10,9 +10,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Todo = () => {
 
-
+  // setting todos variable state of type ItemType with initial value of []
   const [todos, setTodos] = useState<ItemType[]>([]);
   const [input, setInput] = useState<string>('');
+  // defining a secondary todos to display so the original array is not modified
   const [displayTodos, setDisplayTodos] = useState<ItemType[]>([]);
 
   // Load todos from local storage when the component mounts
@@ -34,10 +35,12 @@ const Todo = () => {
     setDisplayTodos(todos)
   }, [todos]);
 
+  // pulling the input value
   const handleTodoInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.currentTarget.value);
   }
 
+  // reseting input when form is submitted
   const handleSubmitForm = (event: React.FormEvent) => {
     event.preventDefault();
     setInput('');
@@ -47,6 +50,8 @@ const Todo = () => {
     setTodos([...todos, newTodo])
   }
 
+  // compare if the id of the todo matches the id passed as an argument
+  // and change the value of completed if so
  const handleCompleteItem = (id:string) => {
   setTodos(
     todos.map((todo) => {
@@ -58,12 +63,16 @@ const Todo = () => {
   )
  }
 
+//  filter all todo objects in the todos array that does not match (!==) 
+// the id passed as argument to the function
  const handleDeleteItem = (id:string) => {
     setTodos(
       todos.filter((todo) => todo.id !== id)
     );
  };
 
+//  filter all objects in the todos array that has completed as true
+// and set the value to setDisplayTodos so main array wont change
  const handleFilterCompletedItem = () => {
   setDisplayTodos(todos.filter((todo) => todo.completed)
   )
@@ -78,11 +87,11 @@ const Todo = () => {
  }
 
  const handleClearCompleteItems = () => {
-  setDisplayTodos(todos.filter((todo) => !todo.completed))
+  setTodos(todos.filter((todo) => !todo.completed))
  }
 
   return (
-    <div className="todo-wrapper flex flex-col w-full sm:w-2/5 sm:mt-4">
+    <div className="todo-wrapper flex flex-col w-full sm:w-2/5 mt-auto sm:mt-4">
       <form onSubmit={handleSubmitForm}>
         <CustomInput
           type='text'
@@ -98,9 +107,9 @@ const Todo = () => {
             flex justify-between items-center todo-item
             p-4 border-b-2 border-gray-700`}>
             {/* Completed Item */}
-            <div onClick={() => {handleCompleteItem(todo.id)}} className={`${todo.completed ? 'line-through todo-item-completed' : ''} flex cursor-pointer`}>
-              <div className={`${todo.completed ? 'bg-gradient-to-br from-blue-500 to-pink-500' : ''} rounded-full border-2 flex justify-center items-center p-1`}>
-                <Image src={CheckIcon} alt='Check-Icon' className='object-contain w-3 h-3'/>
+            <div onClick={() => {handleCompleteItem(todo.id)}} className={`${todo.completed ? 'line-through todo-item-completed' : ''} flex items-center cursor-pointer`}>
+              <div className={`${todo.completed ? 'bg-gradient-to-br from-blue-500 to-pink-500' : ''} rounded-full border-2 flex justify-center items-center w-5 h-5 circle-item`}>
+                {todo.completed && <Image src={CheckIcon} alt='Check-Icon' className='object-contain'/>}
               </div>
               <span className='flex-1 ms-2 cursor-pointer select-none'>
                 {todo.text}
@@ -117,12 +126,12 @@ const Todo = () => {
         <span className='select-none'>
           {displayTodos.filter((todo) => !todo.completed).length} Items Left
         </span>
-        <button onClick={handleClearCompleteItems}>Clear All Completed</button>
+        {todos.filter((todo) => todo.completed).length > 0 ? <button onClick={handleClearCompleteItems}>Clear All Completed</button> : <span>No Completed Items</span>}
       </div>
       <div className='flex justify-center gap-8 bottom-menu mt-3 p-4 rounded-lg'>
         <button onClick={handleFilterAllItems}>All</button>
         <button onClick={handlerFilterActiveItems}>Active</button>
-        <button onClick={handleFilterCompletedItem}>Complete</button>
+        <button onClick={handleFilterCompletedItem}>Completed</button>
       </div>
     </div>
   )

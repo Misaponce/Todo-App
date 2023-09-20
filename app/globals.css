@@ -10,26 +10,29 @@
   --Bright-Blue: hsl(220, 98%, 61%);
   --Check-Background: linear-gradient hsl(192, 100%, 67%) to hsl(280, 87%, 65%);
   
-  /* Neutral */
-  
-  /* Light Theme */
-  
-  --Very-Light-Gray: hsl(0, 0%, 98%);
-  --Very-Light-Grayish-Blue: hsl(236, 33%, 92%);
-  --Light-Grayish-Blue: hsl(233, 11%, 84%);
-  --Dark-Grayish-Blue: hsl(236, 9%, 61%);
-  --Very-Dark-Grayish-Blue: hsl(235, 19%, 35%);
-  
   /* Dark Theme */
   
-  --Very-Dark-Blue: hsl(235, 21%, 11%);
-  --Very-Dark-Desaturated-Blue: hsl(235, 24%, 19%);
-  --Light-Grayish-Blue: hsl(234, 39%, 85%);
-  --Light-Grayish-Blue: hsl(236, 33%, 92%); /* Hover */
-  --Dark-Grayish-Blue: hsl(234, 11%, 52%);
+  --background: hsl(235, 21%, 11%);
+  --To-Do-bg: hsl(235, 24%, 19%);
+  --Text-Primary: hsl(234, 11%, 52%);
+  --Text-Secondary: hsl(233, 11%, 84%);
   --Very-Dark-Grayish-Blue: hsl(233, 14%, 35%);
-  --Very-Dark-Grayish-Blue: hsl(237, 14%, 26%);
+  --bg-image-mobile: url('../assets/images/bg-mobile-dark.jpg');
+  --bg-image-desktop: url('../assets/images/bg-desktop-dark.jpg');
+  
+}
 
+/* Defining attribute selector to element with data-theme on it*/
+[data-theme='light'] {
+  /* Light Theme */
+  
+  --background: hsl(0, 0%, 98%);
+  --To-Do-bg: hsl(236, 33%, 92%);
+  --Text-Primary: hsl(237, 14%, 26%);
+  --Text-Secondary: hsl(237, 14%, 26%);
+  --Very-Dark-Grayish-Blue: hsl(235, 19%, 35%);
+  --bg-image-mobile: url('../assets/images/bg-mobile-light.jpg');
+  --bg-image-desktop: url('../assets/images/bg-desktop-light.jpg');
 }
 
 * {
@@ -40,35 +43,56 @@
 }
 
 body {
-  background-color: var(--Very-Dark-Blue);
-  background-image: url('../assets/images/bg-mobile-dark.jpg');
+  background-color: var(--background);
+}
+
+main {
+  background-color: var(--background);
+  background-image: var(--bg-image-mobile);
   background-repeat: no-repeat;
   background-size: contain;
+  color: var(--Text-Secondary);
+  transition: all 0.5s ease-in-out;
+}
+
+main h2 {
   color: white;
 }
 
 .custom-input {
-  background-color: var(--Very-Dark-Desaturated-Blue);
-  color: var(--Very-Light-Gray);
+  background-color: var(--To-Do-bg);
+  color: var(--Text-Primary);
 }
 
 .todo-item {
-  background-color: var(--Very-Dark-Desaturated-Blue);
+  background-color: var(--To-Do-bg);
+}
+
+.circle-item {
+  border-color: var(--Text-Primary);
 }
 
 .todo-item-completed {
-  color: var(--Dark-Grayish-Blue);
+  color: var(--Text-Primary);
 }
 
 .bottom-display-options, .bottom-menu {
-  background-color: var(--Very-Dark-Desaturated-Blue);
-  color: var(--Dark-Grayish-Blue);
+  background-color: var(--To-Do-bg);
+  color: var(--Text-Primary);
 }
+
+.todo-wrapper button:hover {
+  color: var(--Bright-Blue);
+}
+
+/* Footer Style */
+.attribution { font-size: 11px; text-align: center;}
+.attribution a { color: var(--Bright-Blue); }
 
 /* Responsive Design */
 @media screen and (min-width: 1440px) {
-  body {
-    background-image: url('../assets/images/bg-desktop-dark.jpg');
+  main {
+    background-image: var(--bg-image-desktop);
     background-repeat: no-repeat;
     background-size: contain;
   }
