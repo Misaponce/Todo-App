@@ -44,6 +44,7 @@ const Todo = () => {
   const handleSubmitForm = (event: React.FormEvent) => {
     event.preventDefault();
     setInput('');
+    console.log('New Todo Added 🎉🎉🎉')
 
     const newTodo: ItemType = {id: uuidv4(), text:input, completed:false}
     
@@ -85,6 +86,7 @@ const Todo = () => {
  const handleFilterAllItems = () => {
   setDisplayTodos(todos)
  }
+
 
  const handleClearCompleteItems = () => {
   setTodos(todos.filter((todo) => !todo.completed))
