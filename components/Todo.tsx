@@ -2,22 +2,19 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
-import CustomInput from './CustomInput'
 import CloseIcon from '../assets/images/icon-cross.svg';
 import CheckIcon from '../assets/images/icon-check.svg';
 import { ItemType } from '@/types';
-import { v4 as uuidv4 } from 'uuid';
+import TodoForm from './TodoForm';
 
 const Todo = () => {
 
   // setting todos variable state of type ItemType with initial value of []
   const [todos, setTodos] = useState<ItemType[]>([]);
-  const [input, setInput] = useState<string>('');
   // defining a secondary todos to display so the original array is not modified
   const [displayTodos, setDisplayTodos] = useState<ItemType[]>([]);
 
   // Load todos from local storage when the component mounts
-
   useEffect(() => {
     const savedTodos = localStorage.getItem('todos');
 
@@ -28,27 +25,19 @@ const Todo = () => {
   }, []);
 
   // Save todos to local storage whenever they change
-
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
     // Updating displaytodos whenever todos change
     setDisplayTodos(todos)
   }, [todos]);
 
-  // pulling the input value
-  const handleTodoInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(event.currentTarget.value);
-  }
 
-  // reseting input when form is submitted
-  const handleSubmitForm = (event: React.FormEvent) => {
-    event.preventDefault();
-    setInput('');
-    console.log('New Todo Added 🎉🎉🎉')
-
-    const newTodo: ItemType = {id: uuidv4(), text:input, completed:false}
-    
-    setTodos([...todos, newTodo])
+  const handleSubmitForm = (todo: ItemType) => {
+    // making sure no blank spaces are added as a new 'todo'
+    if(todo.text.trim()) {
+      todo.text = todo.text.trim()
+      setTodos([todo, ...todos])
+    }
   }
 
   // compare if the id of the todo matches the id passed as an argument
@@ -94,20 +83,13 @@ const Todo = () => {
 
   return (
     <div className="todo-wrapper flex flex-col w-full sm:w-2/5 mt-auto sm:mt-4">
-      <form onSubmit={handleSubmitForm}>
-        <CustomInput
-          type='text'
-          value={input}
-          placeHolder='Create a new todo...'
-          onChange={handleTodoInput}
-        />
-      </form>
+      <TodoForm onSubmit={handleSubmitForm}/>
       <ul className='mt-4 rounded-t-lg overflow-hidden'>
         {displayTodos.map((todo) => (
           <li key={todo.id} 
             className={` 
             flex justify-between items-center todo-item
-            p-4 border-b-2 border-gray-700`}>
+            p-4 border-b-2 border-gray-700 cursor-move`} draggable>
             {/* Completed Item */}
             <div onClick={() => {handleCompleteItem(todo.id)}} className={`${todo.completed ? 'line-through todo-item-completed' : ''} flex items-center cursor-pointer`}>
               <div className={`${todo.completed ? 'bg-gradient-to-br from-blue-500 to-pink-500' : ''} rounded-full border-2 flex justify-center items-center w-5 h-5 circle-item`}>
