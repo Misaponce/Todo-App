@@ -1,10 +1,10 @@
-import CustomInput from "./CustomInput";
+import TodoForm from "./TodoForm";
 import Todo from "./Todo";
 import Footer from "./Footer";
 
 
 export default {
-    CustomInput,
+    TodoForm,
     Todo,
     Footer,
 }
