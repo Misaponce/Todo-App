@@ -57,6 +57,11 @@ main {
 
 main h2 {
   color: white;
+  font-family: sans-serif;
+}
+
+h4 {
+  color: var(--Text-Primary);
 }
 
 .custom-input {

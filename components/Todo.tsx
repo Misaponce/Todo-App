@@ -6,6 +6,7 @@ import CloseIcon from '../assets/images/icon-cross.svg';
 import CheckIcon from '../assets/images/icon-check.svg';
 import { ItemType } from '@/types';
 import TodoForm from './TodoForm';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 const Todo = () => {
 
@@ -30,6 +31,28 @@ const Todo = () => {
     // Updating displaytodos whenever todos change
     setDisplayTodos(todos)
   }, [todos]);
+
+
+  // DND Function
+  const handleDragDrop = (results: DropResult) => {
+    const {source, destination} = results;
+
+    if(!destination) return;
+
+    if(source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    const updatedTodos = [...displayTodos];
+    const [movedTodo] = updatedTodos.splice(source.index, 1);
+
+    updatedTodos.splice(destination.index, 0, movedTodo);
+
+    setDisplayTodos(updatedTodos);
+    // Save updatedTodos to keep the same data over the current session
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+
+    console.log(results);
+
+  }
 
 
   const handleSubmitForm = (todo: ItemType) => {
@@ -84,39 +107,59 @@ const Todo = () => {
   return (
     <div className="todo-wrapper flex flex-col w-full sm:w-2/5 mt-auto sm:mt-4">
       <TodoForm onSubmit={handleSubmitForm}/>
-      <ul className='mt-4 rounded-t-lg overflow-hidden'>
-        {displayTodos.map((todo) => (
-          <li key={todo.id} 
-            className={` 
-            flex justify-between items-center todo-item
-            p-4 border-b-2 border-gray-700 cursor-move`} draggable>
-            {/* Completed Item */}
-            <div onClick={() => {handleCompleteItem(todo.id)}} className={`${todo.completed ? 'line-through todo-item-completed' : ''} flex items-center cursor-pointer`}>
-              <div className={`${todo.completed ? 'bg-gradient-to-br from-blue-500 to-pink-500' : ''} rounded-full border-2 flex justify-center items-center w-5 h-5 circle-item`}>
-                {todo.completed && <Image src={CheckIcon} alt='Check-Icon' className='object-contain'/>}
+      {/* Drag and Drop Functionality  */}
+        <DragDropContext onDragEnd={handleDragDrop}>
+          <Droppable droppableId='ROOT' type='group'>
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className="list-container p-0 mt-4">
+                <ul className='rounded-t-lg overflow-hidden'>
+                  {displayTodos.map((todo, index) => (
+                    <Draggable draggableId={todo.id} key={todo.id} index={index}>
+                      {(provided) => (
+                        <li key={todo.id} 
+                          className={` 
+                          flex justify-between items-center todo-item
+                          p-4 border-b-2 border-gray-700 cursor-move`}
+                          {...provided.dragHandleProps}
+                          {...provided.draggableProps}
+                          ref={provided.innerRef}
+                          >
+                          {/* Completed Item */}
+                          <div onClick={() => {handleCompleteItem(todo.id)}} className={`${todo.completed ? 'line-through todo-item-completed' : ''} flex items-center cursor-pointer`}>
+                            <div className={`${todo.completed ? 'bg-gradient-to-br from-blue-500 to-pink-500' : ''} rounded-full border-2 flex justify-center items-center w-5 h-5 circle-item`}>
+                              {todo.completed && <Image src={CheckIcon} alt='Check-Icon' className='object-contain'/>}
+                            </div>
+                            <span className='flex-1 ms-2 cursor-pointer select-none'>
+                              {todo.text}
+                            </span>
+                          </div>
+                          {/* Delete Item */}
+                          <div onClick={() => handleDeleteItem(todo.id)} className='ml-auto opacity-70 hover:opacity-100'>
+                            <Image src={CloseIcon} alt='Close-icon' className='object-contain w-3 h-3 cursor-pointer'/>
+                          </div>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                </ul>
+                {/* this will render a placeholder to keep card size */}
+                {provided.placeholder}
               </div>
-              <span className='flex-1 ms-2 cursor-pointer select-none'>
-                {todo.text}
-              </span>
-            </div>
-            {/* Delete Item */}
-            <div onClick={() => handleDeleteItem(todo.id)} className='ml-auto opacity-70 hover:opacity-100'>
-              <Image src={CloseIcon} alt='Close-icon' className='object-contain w-3 h-3 cursor-pointer'/>
-            </div>
-          </li>
-        ))}
-      </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
       <div className='p-4 bottom-display-options w-full rounded-b-md flex justify-between'>
         <span className='select-none'>
           {displayTodos.filter((todo) => !todo.completed).length} Items Left
         </span>
-        {todos.filter((todo) => todo.completed).length > 0 ? <button onClick={handleClearCompleteItems}>Clear All Completed</button> : <span>No Completed Items</span>}
+        {todos.filter((todo) => todo.completed).length > 0 ? <button onClick={handleClearCompleteItems}>Clear All Completed</button> : <span className='select-none'>No Completed Items</span>}
       </div>
       <div className='flex justify-center gap-8 bottom-menu mt-3 p-4 rounded-lg'>
         <button onClick={handleFilterAllItems}>All</button>
         <button onClick={handlerFilterActiveItems}>Active</button>
         <button onClick={handleFilterCompletedItem}>Completed</button>
       </div>
+      <h4 className='text-center mt-5 text-xs'>Drag and drop to reorder list</h4>
     </div>
   )
 }

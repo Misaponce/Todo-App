@@ -53,6 +53,8 @@ Users should be able to:
 - [React](https://reactjs.org/) - JS library
 - [Next.js](https://nextjs.org/) - React framework
 - [Tailwind CSS](https://tailwindcss.com/) - For styles
+- [UUID]((https://www.npmjs.com/package/uuid)) - For unique ID
+- [react-beautiful-dnd]((https://github.com/atlassian/react-beautiful-dnd)) - For drag and drop functionality
 
 ### What I learned
 
@@ -67,6 +69,7 @@ The drag and drop option is still pending as I'm still working on understandding
 ### Useful resources
 
 - [UUID](https://www.npmjs.com/package/uuid) - To create unique ID's (uuid.v4()). Create a version 4 (random) UUID.
+- [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd) - Very useful to add drag and drop functionality.
 
 ## Author
 
