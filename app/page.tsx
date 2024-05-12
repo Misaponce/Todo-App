@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <main className={`min-h-screen flex flex-col items-center p-10 pb-0 sm:p-24 sm:pb-0`} data-theme={theme}>
       <div className="title-container w-full sm:w-2/5 flex justify-between sm:mb-4">
-        <h2 className='uppercase font-bold text-2xl'>to do</h2>
+        <h2 className='uppercase font-bold text-2xl select-none'>to do</h2>
         <button onClick={switchTheme}>
           <Image src={iconMode} alt='Moon-Icon' className='object-contain'/>
         </button>
